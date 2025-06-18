@@ -1,0 +1,8 @@
+{
+  "WebAPI": {
+    "Enabled": true,
+    "Port": 11080,
+    "SSL": false,
+    "AllowedOrigins": ["*"]
+  }
+}
