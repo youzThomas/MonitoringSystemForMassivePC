@@ -1,7 +1,7 @@
 import requests
 
 class VeyonClient:
-    def __init__(self, base_url: str = "http://localhost:8080"):
+    def __init__(self, base_url: str = "http://10.71.0.109"):
         # Initialize the Veyon API client ≥ı ºªØVeyon API client
         self.base_url = base_url
         self.connection_uid = None
