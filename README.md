@@ -1,2 +1,2 @@
 # MonitoringSystemForMassivePC
-First Commit
+Monitoting & Controlling System for massive PCs based on Veyon WebAPI
