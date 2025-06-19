@@ -9,9 +9,9 @@ export const useVeyonStore = defineStore('veyon', () => {
 
   const connect = async () => {
     try {
-      await axios.post('http://localhost:8000/auth', {
+      await axios.post('http://10.71.0.109:8000/auth', {
         auth_method: "0c69b301-81b4-42d6-8fae-128cdd113314",
-        credentials: { keyname: "teacher", keydata: "YOUR_KEY" }
+        credentials: { keyname: "KEYNAME", keydata: "PRIVATE_KEY" }
       })
       isConnected.value = true
     } catch (err) {
@@ -21,7 +21,7 @@ export const useVeyonStore = defineStore('veyon', () => {
 
   const capture = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/screenshot', {
+      const response = await axios.get('http://10.71.0.109:8000/screenshot', {
         responseType: 'blob'
       })
       screenshots.value.push(URL.createObjectURL(response.data))
@@ -32,7 +32,7 @@ export const useVeyonStore = defineStore('veyon', () => {
 
   const lock = async () => {
     try {
-      await axios.post('http://localhost:8000/lock-screens')
+      await axios.post('http://10.71.0.109:8000/lock-screens')
     } catch (err) {
       error.value = 'Lock failed'
     }
