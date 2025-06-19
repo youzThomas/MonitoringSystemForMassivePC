@@ -54,4 +54,7 @@ Thumbs.db
 # Project specific
 config.ini
 *.config
-*.conf 
+*.conf
+
+# Frontend environment
+frontend/.env 

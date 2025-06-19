@@ -2,6 +2,9 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
+const keyname = import.meta.env.VITE_VEYON_KEYNAME
+const keydata = import.meta.env.VITE_VEYON_PRIVATE_KEY
+
 export const useVeyonStore = defineStore('veyon', () => {
   const isConnected = ref(false)
   const screenshots = ref<string[]>([])
@@ -9,9 +12,9 @@ export const useVeyonStore = defineStore('veyon', () => {
 
   const connect = async () => {
     try {
-      await axios.post('http://10.71.0.109:8000/auth', {
+      await axios.post('http://10.71.0.109:11080/auth', {
         auth_method: "0c69b301-81b4-42d6-8fae-128cdd113314",
-        credentials: { keyname: "KEYNAME", keydata: "PRIVATE_KEY" }
+        credentials: { keyname: keyname, keydata: keydata }
       })
       isConnected.value = true
     } catch (err) {
@@ -21,7 +24,7 @@ export const useVeyonStore = defineStore('veyon', () => {
 
   const capture = async () => {
     try {
-      const response = await axios.get('http://10.71.0.109:8000/screenshot', {
+      const response = await axios.get('http://10.71.0.109:11080/screenshot', {
         responseType: 'blob'
       })
       screenshots.value.push(URL.createObjectURL(response.data))
@@ -32,7 +35,7 @@ export const useVeyonStore = defineStore('veyon', () => {
 
   const lock = async () => {
     try {
-      await axios.post('http://10.71.0.109:8000/lock-screens')
+      await axios.post('http://10.71.0.109:11080/lock-screens')
     } catch (err) {
       error.value = 'Lock failed'
     }
