@@ -1,85 +1,37 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <div class="p-8 max-w-md mx-auto">
+    <h1 class="text-2xl font-bold mb-4">Set Reservation</h1>
+    <form @submit.prevent="submitReservation" class="space-y-4">
+      <div>
+        <label>Start Time:</label>
+        <input v-model="start" type="datetime-local" class="border p-2 w-full" />
+      </div>
+      <div>
+        <label>End Time:</label>
+        <input v-model="end" type="datetime-local" class="border p-2 w-full" />
+      </div>
+      <button class="bg-blue-500 text-white px-4 py-2 rounded" type="submit">Submit</button>
+    </form>
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<script setup>
+import { ref } from 'vue'
+
+const start = ref('')
+const end = ref('')
+
+const submitReservation = async () => {
+  const res = await fetch('http://localhost:5000/set-reservation', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      start_time: start.value,
+      end_time: end.value
+    })
+  })
+
+  const json = await res.json()
+  alert(json.status === 'saved' ? 'Reservation set successfully!' : 'Failed to save reservation.')
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
+</script>
