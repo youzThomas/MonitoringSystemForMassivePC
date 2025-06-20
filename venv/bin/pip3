@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/Users/mac/VS Code Projects/Personal Projects/MonitoringSystemForMassivePC/.venv/bin/python" "$0" "$@"
+'''exec' "/Users/mac/VS Code Projects/Personal Projects/MonitoringSystemForMassivePC/venv/bin/python3" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re
