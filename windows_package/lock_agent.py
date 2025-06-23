@@ -80,11 +80,17 @@ def destroy_overlay():
         pass
     ctypes.windll.user32.BlockInput(False)
 
+def show_warning_box(msg):
+    ctypes.windll.user32.MessageBoxW(0, msg, "锁定提示", 0)
+
 def main():
     global locked, current_cred, current_start, current_end
 
     print("🔒 Starting in locked state...")
     launch_lock_screen()
+
+    # Track which warnings have been shown
+    warnings_shown = {5: False, 3: False, 1: False}
 
     while True:
         start, end, cred = get_reservation()
@@ -93,13 +99,14 @@ def main():
         current_start, current_end, current_cred = start, end, cred
 
         # Warn before locking: 5, 3, 1 minutes
-        for m in [5, 3, 1]:
-            remaining_sec = (end - now).total_seconds() if end else 0
-            if remaining_sec <= m * 60 and remaining_sec > (m - 1) * 60:
-                msg = f"{m}分钟后将锁定，请提前保存资料。"
-                print(msg)
-                threading.Thread(target=lambda: ctypes.windll.user32.MessageBoxW(0, msg, "锁定提示", 0)).start()
-
+        if end:
+            remaining_sec = (end - now).total_seconds()
+            for m in [5, 3, 1]:
+                if remaining_sec <= m * 60 and not warnings_shown[m] and remaining_sec > (m - 1) * 60:
+                    msg = f"{m}分钟后将锁定，请提前保存资料。"
+                    print(msg)
+                    threading.Thread(target=show_warning_box, args=(msg,)).start()
+                    warnings_shown[m] = True
 
         if locked:
             # Still locked, wait for manual input
@@ -110,6 +117,7 @@ def main():
                 print("🔒 Reservation expired or missing. Re-locking.")
                 launch_lock_screen()
                 locked = True
+                warnings_shown = {5: False, 3: False, 1: False}  # Reset warnings
 
         time.sleep(10)
 
