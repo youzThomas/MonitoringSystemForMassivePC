@@ -81,7 +81,11 @@ def destroy_overlay():
     ctypes.windll.user32.BlockInput(False)
 
 def show_warning_box(msg):
-    ctypes.windll.user32.MessageBoxW(0, msg, "锁定提示", 0)
+    # Explicitly cast return type to 32-bit integer
+    MessageBoxW = ctypes.windll.user32.MessageBoxW
+    MessageBoxW.restype = ctypes.c_int  # Prevent large return value from crashing
+    MessageBoxW(0, msg, "锁定提示", 0)
+
 
 def main():
     global locked, current_cred, current_start, current_end
