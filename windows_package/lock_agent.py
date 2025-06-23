@@ -57,7 +57,7 @@ def launch_lock_screen():
         root.attributes("-topmost", True)
         root.protocol("WM_DELETE_WINDOW", lambda: None)
 
-        tk.Label(root, text="🔒 Locked.\nEnter your credential to unlock.",
+        tk.Label(root, text="🔒 已锁定\n请输入预约信息以解锁",
                  fg="white", bg="black", font=("Arial", 28)).pack(pady=20)
 
         cred_input = tk.StringVar()
@@ -65,7 +65,7 @@ def launch_lock_screen():
         entry.pack(ipadx=10, ipady=5)
         entry.focus()
 
-        tk.Button(root, text="Unlock", command=lambda: attempt_unlock(cred_input, root),
+        tk.Button(root, text="解锁", command=lambda: attempt_unlock(cred_input, root),
                   font=("Arial", 16)).pack(pady=20)
 
         root.mainloop()
@@ -91,6 +91,15 @@ def main():
         now = datetime.datetime.now()
 
         current_start, current_end, current_cred = start, end, cred
+
+        # Warn before locking: 5, 3, 1 minutes
+        for m in [5, 3, 1]:
+            remaining_sec = (end - now).total_seconds() if end else 0
+            if remaining_sec <= m * 60 and remaining_sec > (m - 1) * 60:
+                msg = f"{m}分钟后将锁定，请提前保存资料。"
+                print(msg)
+                threading.Thread(target=lambda: ctypes.windll.user32.MessageBoxW(0, msg, "锁定提示", 0)).start()
+
 
         if locked:
             # Still locked, wait for manual input
