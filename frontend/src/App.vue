@@ -15,8 +15,14 @@
         <label class="block">End Time:</label>
         <input v-model="end" type="datetime-local" class="border p-2 w-full" />
       </div>
+      <div>
+        <label class="block">Credential:</label>
+        <input v-model="credential" class="border p-2 w-full" type="text" placeholder="Enter credential (e.g. abc123)" />
+      </div>
 
-      <button class="bg-blue-600 text-white px-4 py-2 rounded" type="submit">Submit Reservation</button>
+      <button class="bg-blue-600 text-white px-4 py-2 rounded" type="submit">
+        Submit Reservation
+      </button>
     </form>
 
     <p v-if="success" class="mt-4 text-green-600">✅ Reservation saved!</p>
@@ -30,6 +36,7 @@ import { ref } from 'vue'
 const deviceId = ref('')
 const start = ref('')
 const end = ref('')
+const credential = ref('')
 const success = ref(false)
 const error = ref(false)
 
@@ -44,7 +51,8 @@ const submit = async () => {
       body: JSON.stringify({
         device_id: deviceId.value,
         start_time: start.value,
-        end_time: end.value
+        end_time: end.value,
+        credential: credential.value
       })
     })
 
