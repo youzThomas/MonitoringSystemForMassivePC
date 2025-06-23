@@ -14,6 +14,7 @@ current_cred = ""
 current_start = None
 current_end = None
 
+
 def get_reservation():
     try:
         res = requests.get(f"{API_URL}?device_id={DEVICE_ID}")
@@ -27,15 +28,20 @@ def get_reservation():
         pass
     return None, None, None
 
+
 def attempt_unlock(user_input, root):
     global locked, current_cred, current_start, current_end
+
+    def safe_unlock():
+        ctypes.windll.user32.BlockInput(False)
+        root.destroy()
+        print("✅ GUI destroyed safely")
 
     now = datetime.datetime.now()
     if current_start and current_end and current_start <= now <= current_end:
         if user_input.get() == current_cred:
             print("✅ Valid reservation and matching credential. Unlocking.")
-            ctypes.windll.user32.BlockInput(False)
-            root.destroy()
+            root.after(0, safe_unlock)
             locked = False
             return
         else:
@@ -45,7 +51,12 @@ def attempt_unlock(user_input, root):
 
     user_input.set("")  # Clear input
 
+
 def launch_lock_screen():
+    global overlay_window
+    if overlay_window:  # Prevent multiple overlays
+        return
+
     ctypes.windll.user32.BlockInput(True)
 
     def ui():
@@ -69,21 +80,15 @@ def launch_lock_screen():
                   font=("Arial", 16)).pack(pady=20)
 
         root.mainloop()
+        overlay_window = None  # Clean up when closed
 
     threading.Thread(target=ui).start()
 
-def destroy_overlay():
-    global overlay_window
-    try:
-        overlay_window.destroy()
-    except:
-        pass
-    ctypes.windll.user32.BlockInput(False)
 
 def show_warning_box(msg):
-    # Explicitly cast return type to 32-bit integer
+    # Explicitly cast return type to 32-bit integer to prevent overflow crash
     MessageBoxW = ctypes.windll.user32.MessageBoxW
-    MessageBoxW.restype = ctypes.c_int  # Prevent large return value from crashing
+    MessageBoxW.restype = ctypes.c_int
     MessageBoxW(0, msg, "锁定提示", 0)
 
 
@@ -124,6 +129,7 @@ def main():
                 warnings_shown = {5: False, 3: False, 1: False}  # Reset warnings
 
         time.sleep(10)
+
 
 if __name__ == "__main__":
     main()
