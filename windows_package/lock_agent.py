@@ -35,21 +35,21 @@ def attempt_unlock(user_input, root):
     def safe_unlock():
         ctypes.windll.user32.BlockInput(False)
         root.destroy()
-        print("✅ GUI destroyed safely")
+        print("GUI destroyed safely")
 
     now = datetime.datetime.now()
     if current_start and current_end and current_start <= now <= current_end:
         if user_input.get() == current_cred:
-            print("✅ Valid reservation and matching credential. Unlocking.")
+            print("Valid reservation and matching credential. Unlocking.")
             root.after(0, safe_unlock)
             locked = False
             return
         else:
-            print("❌ Credential mismatch.")
+            print("Credential mismatch.")
     else:
-        print("❌ No valid reservation active.")
+        print("No valid reservation active.")
 
-    user_input.set("")  # Clear input
+    user_input.set("")
 
 
 def launch_lock_screen():
@@ -98,7 +98,6 @@ def main():
     print("🔒 Starting in locked state...")
     launch_lock_screen()
 
-    # Track which warnings have been shown
     warnings_shown = {5: False, 3: False, 1: False}
 
     while True:
@@ -118,7 +117,6 @@ def main():
                     warnings_shown[m] = True
 
         if locked:
-            # Still locked, wait for manual input
             pass
         else:
             # If unlocked, auto-lock if reservation is expired
