@@ -68,7 +68,7 @@ def launch_lock_screen():
         root.attributes("-topmost", True)
         root.protocol("WM_DELETE_WINDOW", lambda: None)
 
-        tk.Label(root, text="🔒 已锁定\n请输入预约信息以解锁",
+        tk.Label(root, text="🔒 Locked.\nPlease enter credential to unlock.",
                  fg="white", bg="black", font=("Arial", 28)).pack(pady=20)
 
         cred_input = tk.StringVar()
@@ -76,7 +76,7 @@ def launch_lock_screen():
         entry.pack(ipadx=10, ipady=5)
         entry.focus()
 
-        tk.Button(root, text="解锁", command=lambda: attempt_unlock(cred_input, root),
+        tk.Button(root, text="Unlock", command=lambda: attempt_unlock(cred_input, root),
                   font=("Arial", 16)).pack(pady=20)
 
         root.mainloop()
@@ -89,7 +89,7 @@ def show_warning_box(msg):
     # Explicitly cast return type to 32-bit integer to prevent overflow crash
     MessageBoxW = ctypes.windll.user32.MessageBoxW
     MessageBoxW.restype = ctypes.c_int
-    MessageBoxW(0, msg, "锁定提示", 0)
+    MessageBoxW(0, msg, "Locked state warning", 0)
 
 
 def main():
@@ -111,7 +111,7 @@ def main():
             remaining_sec = (end - now).total_seconds()
             for m in [5, 3, 1]:
                 if remaining_sec <= m * 60 and not warnings_shown[m] and remaining_sec > (m - 1) * 60:
-                    msg = f"{m}分钟后将锁定，请提前保存资料。"
+                    msg = f"Warning: Reservation expires in {m} minute(s). Please take action."
                     print(msg)
                     threading.Thread(target=show_warning_box, args=(msg,)).start()
                     warnings_shown[m] = True
