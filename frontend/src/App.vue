@@ -1,32 +1,32 @@
 <template>
   <div class="p-6 max-w-md mx-auto">
-    <h2 class="text-2xl font-bold mb-4">设备共享预约平台</h2>
+    <h2 class="text-2xl font-bold mb-4">Reservation Panel</h2>
 
     <form @submit.prevent="submit" class="space-y-4">
       <div>
-        <label class="block">设备名称:</label>
+        <label class="block">Device:</label>
         <input v-model="deviceId" class="border p-2 w-full" placeholder="e.g. pc-001" />
       </div>
       <div>
-        <label class="block">开始时间:</label>
+        <label class="block">Start Time:</label>
         <input v-model="start" type="datetime-local" class="border p-2 w-full" />
       </div>
       <div>
-        <label class="block">结束时间:</label>
+        <label class="block">End Time:</label>
         <input v-model="end" type="datetime-local" class="border p-2 w-full" />
       </div>
       <div>
-        <label class="block">预约人:</label>
+        <label class="block">Credential:</label>
         <input v-model="credential" class="border p-2 w-full" type="text" placeholder="Enter credential (e.g. abc123)" />
       </div>
 
       <button class="bg-blue-600 text-white px-4 py-2 rounded" type="submit">
-        提交预约
+        Submit
       </button>
     </form>
 
-    <p v-if="success" class="mt-4 text-green-600">✅ 预约成功！</p>
-    <p v-if="error" class="mt-4 text-red-600">❌ 预约失败！</p>
+    <p v-if="success" class="mt-4 text-green-600">✅ Successfully reserved！</p>
+    <p v-if="error" class="mt-4 text-red-600">❌ Reservation Failed！</p>
   </div>
 </template>
 
